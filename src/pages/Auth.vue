@@ -1,6 +1,5 @@
 <template>
   <q-layout>
-    <q-header></q-header>
     <q-page-container>
       <q-page class="flex flex-center">
         <q-btn

@@ -1,8 +1,14 @@
 <template>
   <q-page>
-    <div class="text-center"><h6>하루 할 일</h6></div>
+    <div class="text-center">
+      <h6>{{ store.state.today }}</h6>
+    </div>
     <div>
-      <q-card v-for="(todo, i) in todos" :key="i" class="q-ma-sm">
+      <q-card
+        v-for="todo in store.state.todoList"
+        :key="todo.uid"
+        class="q-ma-sm"
+      >
         <q-card-section :class="todo.isDone ? 'bg-grey-4' : 'bg-white'">
           <div class="row">
             <div class="col-7">
@@ -32,6 +38,14 @@
                       : 'eva-minus-circle-outline'
                   "
                   class="q-ml-md"
+                  @click="
+                    store.methods.toggleTodo(
+                      store.state.user.uid,
+                      store.state.today,
+                      todo.uid
+                    ),
+                      (todo.isDone = !todo.isDone)
+                  "
                 />
               </div>
             </div>
@@ -39,33 +53,56 @@
         </q-card-section>
       </q-card>
     </div>
+    <q-dialog v-model="store.state.addDialog" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">할 일 추가</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-input
+            label="할 일을 입력해주세요"
+            dense
+            autofocus
+            v-model="text"
+            @keyup.enter="prompt = false"
+          />
+          <q-rating v-model="rating" size="2em" :max="3" color="red" />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="취소" v-close-popup />
+          <q-btn flat label="추가" v-close-popup @click="todoAdd" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
-import { inject } from "vue";
+import { inject, onUnmounted, ref } from "vue";
 
 export default {
   name: "Today",
   setup() {
     const store = inject("store");
 
-    const todos = [
-      {
-        title: "밥묵기",
-        isDone: false,
-        importance: 2,
-      },
-      {
-        title: "빨래하기",
-        isDone: true,
-        importance: 3,
-      },
-    ];
+    const text = ref("");
+
+    async function todoAdd() {
+      store.methods.addTodo(
+        store.state.user.uid,
+        store.state.today,
+        text,
+        false,
+        2
+      );
+    }
 
     return {
-      todos,
       store,
+      text,
+      todoAdd,
     };
   },
 };

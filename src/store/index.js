@@ -1,14 +1,20 @@
 import { reactive } from 'vue'
-import {  getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore, collection, getDocs, getDoc, doc } from "firebase/firestore"
-import { app } from 'boot/firebase'
+import {  signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import {  collection, getDocs, getDoc, doc, setDoc, onSnapshot, query, addDoc, updateDoc } from "firebase/firestore"
+import { db, auth } from 'boot/firebase'
 
 const provider = new GoogleAuthProvider();
-const auth = getAuth();
-const db = getFirestore();
+const date = new Date();
 
 const state = reactive({
-    
+    user:{
+      name:'',
+      email:'',
+      uid:'',
+    },
+    todoList:[],
+    today: date.toLocaleDateString(),
+    addDialog: false,
 })
 
 const methods = {
@@ -21,12 +27,14 @@ const methods = {
         // The signed-in user info.
         const user = result.user;
         let userID = user.uid;
-      
         const userSnap = await getDoc(doc(db, "user", userID));
         if (userSnap.exists()) {
           console.log("Document data:", userSnap.data());
         } else {
-        console.log("No such document!");
+          await setDoc(doc(db, "user", userID), {
+          name: user.displayName,
+          email: user.email,
+          });
         }
       }).catch((error) => {
         // Handle Errors here.
@@ -38,13 +46,54 @@ const methods = {
         const credential = GoogleAuthProvider.credentialFromError(error);
     });
   },
+  
   logOut(){
     signOut(auth).then(() => {
-  // Sign-out successful.
+
     }).catch((error) => {
   // An error happened.
     });
-  }
+  },
+
+  async getTodos(userID, date){
+    state.todoList = [];
+    const q = query(collection(db, "user/"+userID+"/date/"+date+"/todo"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      state.todoList.push({
+        uid: doc.id,
+        title: doc.data().title,
+        isDone: doc.data().isDone,
+        importance: doc.data().importance
+      })
+    });
+    console.log(state.today);
+  },
+
+  async toggleTodo(userID, date, todoID){
+    const todo = doc(db, "user/"+userID+"/date/"+date+"/todo", todoID);
+    const todoSnap = await getDoc(todo);
+    if(todoSnap.data().isDone){
+      await updateDoc(todo, {
+        isDone: false
+      });
+    }
+    else{
+      await updateDoc(todo, {
+        isDone: true
+      });
+    }
+  },
+
+  async addTodo(userID, date, title, isDone, importance){
+    await addDoc(collection(db, "/user/"+userID+"/date/"+date+"/todo/"), {
+      title: title,
+      isDone: isDone,
+      importance: importance
+    });
+  },
+
+  async removeTodo(userID, date, todoID){},
 }
 
 export default {

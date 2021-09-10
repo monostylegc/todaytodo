@@ -5,14 +5,23 @@
         <q-toolbar-title> 오늘의 할 일 </q-toolbar-title>
         <q-space />
 
-        <q-btn flat icon="person" />
+        <q-btn flat label="로그아웃" @click="store.methods.logOut" />
       </q-toolbar>
     </q-header>
 
     <q-page-container>
       <router-view />
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn fab icon="add" color="primary" />
+        <q-btn
+          fab
+          icon="add"
+          color="primary"
+          @click="
+            store.state.todoList.length >= 5
+              ? $q.notify('5개이상 등록할 수 없다')
+              : (store.state.addDialog = !store.state.addDialog)
+          "
+        />
       </q-page-sticky>
     </q-page-container>
 
@@ -34,7 +43,7 @@
 </template>
 
 <script>
-import { Quasar } from "quasar";
+import { Quasar, Notify } from "quasar";
 import { defineComponent, ref, inject } from "vue";
 
 export default defineComponent({

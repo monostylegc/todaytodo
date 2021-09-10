@@ -1,11 +1,9 @@
-import { boot } from 'quasar/wrappers'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyB5nALExeuc-O3CAZ6t3wKT6o90t76DClw",
   authDomain: "todaytodo-9bb22.firebaseapp.com",
@@ -19,11 +17,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const auth = getAuth();
+const db = getFirestore();
 
-// "async" is optional;
-// more info on params: https://v2.quasar.dev/quasar-cli/boot-files
-export default boot(async (/* { app, router, ... } */) => {
-  return{
-    app, analytics
-  }
-})
+export  {
+    app, analytics, auth, db
+}
+
