@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
-import {  signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import {  collection, getDocs, getDoc, doc, setDoc, onSnapshot, query, addDoc, updateDoc } from "firebase/firestore"
+import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { collection, getDocs, getDoc, doc, setDoc,  deleteDoc, query, addDoc, updateDoc } from "firebase/firestore"
 import { db, auth } from 'boot/firebase'
 
 const provider = new GoogleAuthProvider();
@@ -90,10 +90,25 @@ const methods = {
       title: title,
       isDone: isDone,
       importance: importance
+    }).then((result)=>{
+      
+      state.todoList.push({
+        uid: result.id,
+        title: title,
+        isDone: false,
+        importance: importance,
+      });
     });
+    
   },
 
-  async removeTodo(userID, date, todoID){},
+  async removeTodo(userID, date, todoID){
+    await deleteDoc(doc(db, "/user/"+userID+"/date/"+date+"/todo/", todoID));
+    var tempList = state.todoList.filter((e)=>{
+      return e.uid != todoID
+    });
+    state.todoList = tempList;
+  },
 }
 
 export default {

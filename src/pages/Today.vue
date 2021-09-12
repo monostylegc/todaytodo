@@ -22,12 +22,24 @@
                   :max="3"
                   color="red"
                   class="q-mt-sm"
+                  readonly
                 />
               </div>
             </div>
             <div class="col-5 self-center">
               <div class="row justify-around">
-                <q-btn flat dense icon="eva-trash-2-outline" />
+                <q-btn
+                  flat
+                  dense
+                  icon="eva-trash-2-outline"
+                  @click="
+                    store.methods.removeTodo(
+                      store.state.user.uid,
+                      store.state.today,
+                      todo.uid
+                    )
+                  "
+                />
 
                 <q-btn
                   flat
@@ -67,7 +79,10 @@
             v-model="text"
             @keyup.enter="prompt = false"
           />
-          <q-rating v-model="rating" size="2em" :max="3" color="red" />
+          <div class="q-mt-md">
+            중요도 :
+            <q-rating v-model="importance" size="2em" :max="3" color="red" />
+          </div>
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
@@ -80,7 +95,7 @@
 </template>
 
 <script>
-import { inject, onUnmounted, ref } from "vue";
+import { inject, ref } from "vue";
 
 export default {
   name: "Today",
@@ -88,20 +103,24 @@ export default {
     const store = inject("store");
 
     const text = ref("");
+    const importance = ref(1);
 
     async function todoAdd() {
       store.methods.addTodo(
         store.state.user.uid,
         store.state.today,
-        text,
+        text.value,
         false,
-        2
+        importance.value
       );
+      text.value = "";
+      importance.value = 1;
     }
 
     return {
       store,
       text,
+      importance,
       todoAdd,
     };
   },

@@ -18,7 +18,10 @@
           color="primary"
           @click="
             store.state.todoList.length >= 5
-              ? $q.notify('5개이상 등록할 수 없다')
+              ? $q.notify({
+                  message: '5개 이상 등록할 수 없습니다.',
+                  color: 'red',
+                })
               : (store.state.addDialog = !store.state.addDialog)
           "
         />
@@ -55,6 +58,7 @@ export default defineComponent({
     const store = inject("store");
 
     const tab = ref("Today");
+
     return {
       tab,
       store,
