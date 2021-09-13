@@ -14,7 +14,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-page-container>
+    <q-page-container class="constrain">
       <router-view />
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn

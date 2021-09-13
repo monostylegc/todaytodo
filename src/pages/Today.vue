@@ -1,5 +1,5 @@
 <template>
-  <q-page class="constrain">
+  <q-page>
     <div>
       <q-card class="q-ma-sm" flat>
         <q-card-section>
