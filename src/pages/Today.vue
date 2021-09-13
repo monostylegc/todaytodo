@@ -9,7 +9,7 @@
         :key="todo.uid"
         class="q-ma-sm"
       >
-        <q-card-section :class="todo.isDone ? 'bg-grey-4' : 'bg-white'">
+        <q-card-section :class="todo.isDone ? 'bg-grey-6' : 'bg-white'">
           <div class="row">
             <div class="col-7">
               <div class="row">
@@ -45,9 +45,7 @@
                   flat
                   dense
                   :icon="
-                    todo.isDone
-                      ? 'eva-done-all-outline'
-                      : 'eva-minus-circle-outline'
+                    todo.isDone ? 'eva-close-outline' : 'eva-done-all-outline'
                   "
                   class="q-ml-md"
                   @click="
@@ -79,7 +77,7 @@
             v-model="text"
             @keyup.enter="prompt = false"
           />
-          <div class="q-mt-md">
+          <div class="q-mt-md text-caption">
             중요도 :
             <q-rating v-model="importance" size="2em" :max="3" color="red" />
           </div>
