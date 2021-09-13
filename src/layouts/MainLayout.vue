@@ -18,6 +18,7 @@
       <router-view />
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn
+          v-show="this.$route.fullPath === '/'"
           fab
           icon="add"
           color="primary"

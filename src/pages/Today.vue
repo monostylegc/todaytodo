@@ -56,7 +56,9 @@
                   flat
                   dense
                   :icon="
-                    todo.isDone ? 'eva-refresh-outline' : 'eva-done-all-outline'
+                    todo.isDone
+                      ? 'eva-checkmark-circle-outline'
+                      : 'eva-radio-button-off-outline'
                   "
                   class="q-ml-md"
                   @click="
