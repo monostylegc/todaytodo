@@ -1,8 +1,8 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <q-header reveal bordered class="bg-white text-grey-8">
-      <q-toolbar>
-        <q-toolbar-title> 오늘의 할 일 </q-toolbar-title>
+      <q-toolbar class="constrain">
+        <q-toolbar-title> 작심1일 </q-toolbar-title>
         <q-space />
 
         <q-btn flat label="로그아웃" @click="store.methods.logOut" />

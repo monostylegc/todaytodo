@@ -1,7 +1,12 @@
 <template>
-  <q-page>
-    <div class="text-center">
-      <h6>{{ store.state.today }}</h6>
+  <q-page class="constrain">
+    <div>
+      <q-card class="q-ma-sm" flat>
+        <q-card-section>
+          {{ store.state.today }}달성률
+          <q-linear-progress :value="achivement" class="q-my-sm" />
+        </q-card-section>
+      </q-card>
     </div>
     <div>
       <q-card
@@ -93,7 +98,7 @@
 </template>
 
 <script>
-import { inject, ref } from "vue";
+import { inject, ref, computed } from "vue";
 
 export default {
   name: "Today",
@@ -115,17 +120,34 @@ export default {
       importance.value = 1;
     }
 
-    computed;
+    const achivement = computed(() => {
+      let achive,
+        done = 0;
+      let temp = 0;
+
+      let doneList = store.state.todoList.filter((e) => {
+        return e.isDone != false;
+      });
+
+      for (let i = 0; i < store.state.todoList.length; i++) {
+        temp = temp + store.state.todoList[i].importance;
+      }
+
+      for (let v = 0; v < doneList.length; v++) {
+        done = done + doneList[v].importance;
+      }
+
+      achive = done / temp;
+      return achive;
+    });
 
     return {
       store,
       text,
       importance,
       todoAdd,
+      achivement,
     };
-  },
-  computed: {
-    achivement: () => {},
   },
 };
 </script>
