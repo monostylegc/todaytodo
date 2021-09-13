@@ -3,8 +3,14 @@
     <div>
       <q-card class="q-ma-sm" flat>
         <q-card-section>
-          {{ store.state.today }}달성률
-          <q-linear-progress :value="achivement" class="q-my-sm" />
+          {{ store.state.today }} 달성률
+          <q-linear-progress
+            :value="achivement"
+            rounded
+            color="warning"
+            size="20px"
+            class="q-my-sm"
+          />
         </q-card-section>
       </q-card>
     </div>
@@ -98,7 +104,7 @@
 </template>
 
 <script>
-import { inject, ref, computed } from "vue";
+import { inject, ref, computed, onUnmounted } from "vue";
 
 export default {
   name: "Today",
@@ -118,6 +124,14 @@ export default {
       );
       text.value = "";
       importance.value = 1;
+    }
+
+    function setAchive() {
+      store.methods.setAchivement(
+        store.state.user.uid,
+        store.state.today,
+        achivement.value
+      );
     }
 
     const achivement = computed(() => {
@@ -141,11 +155,16 @@ export default {
       return achive;
     });
 
+    onUnmounted(() => {
+      setAchive();
+    });
+
     return {
       store,
       text,
       importance,
       todoAdd,
+      setAchive,
       achivement,
     };
   },

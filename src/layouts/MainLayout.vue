@@ -5,7 +5,12 @@
         <q-toolbar-title> 작심1일 </q-toolbar-title>
         <q-space />
 
-        <q-btn flat label="로그아웃" @click="store.methods.logOut" />
+        <q-btn
+          flat
+          label="로그아웃"
+          @click="store.methods.logOut"
+          v-show="store.state.user.uid"
+        />
       </q-toolbar>
     </q-header>
 

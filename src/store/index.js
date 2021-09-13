@@ -22,6 +22,7 @@ const state = reactive({
       uid:'',
     },
     todoList:[],
+    achiveList:[],
     today: date.yyyymmdd(),
     addDialog: false,
 })
@@ -76,7 +77,6 @@ const methods = {
         importance: doc.data().importance
       })
     });
-    console.log(state.today);
   },
 
   async toggleTodo(userID, date, todoID){
@@ -118,6 +118,25 @@ const methods = {
     });
     state.todoList = tempList;
   },
+
+  async setAchivement(userID, date, achivement){
+    const todayAchive = doc(db, "/user/"+userID+"/date/"+date)
+    await setDoc(todayAchive, {
+      achivement: achivement
+    });
+  },
+
+  async getAchivement(userID){
+    state.achiveList = [];
+    const q = query(collection(db, "user/"+userID+"/date/"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      state.achiveList.push({
+        date: doc.id,
+        achivement: doc.data().achivement
+      })
+    });
+  }
 }
 
 export default {

@@ -29,6 +29,7 @@ export default {
         store.state.user.email = null;
         store.state.user.name = null;
         store.state.todoList = [];
+        store.state.achiveList = [];
         router.replace("/auth");
       }
     });
