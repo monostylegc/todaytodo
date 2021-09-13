@@ -45,7 +45,7 @@
                   flat
                   dense
                   :icon="
-                    todo.isDone ? 'eva-close-outline' : 'eva-done-all-outline'
+                    todo.isDone ? 'eva-refresh-outline' : 'eva-done-all-outline'
                   "
                   class="q-ml-md"
                   @click="
@@ -115,12 +115,17 @@ export default {
       importance.value = 1;
     }
 
+    computed;
+
     return {
       store,
       text,
       importance,
       todoAdd,
     };
+  },
+  computed: {
+    achivement: () => {},
   },
 };
 </script>
