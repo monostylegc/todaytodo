@@ -90,7 +90,7 @@ export default defineComponent({
       {
         icon: "eva-flag-outline",
         label: "목표",
-        to: "",
+        to: "/goal",
       },
       {
         icon: "eva-activity-outline",
