@@ -7,7 +7,7 @@
           <q-linear-progress
             :value="achive.achivement"
             rounded
-            color="secondary"
+            color="green"
             size="10px"
             class="q-my-sm"
           />

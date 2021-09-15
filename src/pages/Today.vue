@@ -5,9 +5,9 @@
         <q-card-section>
           {{ store.state.today }} 달성률
           <q-linear-progress
-            :value="achivement"
+            :value="store.state.achivement"
             rounded
-            color="warning"
+            color="green"
             size="20px"
             class="q-my-sm"
           />
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { inject, ref, computed, onUnmounted } from "vue";
+import { inject, ref } from "vue";
 
 export default {
   name: "Today",
@@ -128,46 +128,11 @@ export default {
       importance.value = 1;
     }
 
-    function setAchive() {
-      store.methods.setAchivement(
-        store.state.user.uid,
-        store.state.today,
-        achivement.value
-      );
-    }
-
-    const achivement = computed(() => {
-      let achive,
-        done = 0;
-      let temp = 0;
-
-      let doneList = store.state.todoList.filter((e) => {
-        return e.isDone != false;
-      });
-
-      for (let i = 0; i < store.state.todoList.length; i++) {
-        temp = temp + store.state.todoList[i].importance;
-      }
-
-      for (let v = 0; v < doneList.length; v++) {
-        done = done + doneList[v].importance;
-      }
-
-      achive = done / temp;
-      return achive;
-    });
-
-    onUnmounted(() => {
-      setAchive();
-    });
-
     return {
       store,
       text,
       importance,
       todoAdd,
-      setAchive,
-      achivement,
     };
   },
 };

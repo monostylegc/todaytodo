@@ -22,6 +22,7 @@ const state = reactive({
       uid:'',
     },
     todoList:[],
+    achivement: 0,
     achiveList:[],
     today: date.yyyymmdd(),
     addDialog: false,
@@ -77,6 +78,8 @@ const methods = {
         importance: doc.data().importance
       })
     });
+    const achivementSnap = await getDoc(doc(db, "/user/"+userID+"/date/",date));
+    state.achivement = achivementSnap.data().achivement;
   },
 
   async toggleTodo(userID, date, todoID){
@@ -92,6 +95,7 @@ const methods = {
         isDone: true
       });
     }
+    this.setAchivement(userID,date)
   },
 
   async addTodo(userID, date, title, isDone, importance){
@@ -119,10 +123,11 @@ const methods = {
     state.todoList = tempList;
   },
 
-  async setAchivement(userID, date, achivement){
-    const todayAchive = doc(db, "/user/"+userID+"/date/"+date)
+  async setAchivement(userID, date ){
+    state.achivement = this.calcAchivement();
+    const todayAchive = doc(db, "/user/"+userID+"/date/"+date);
     await setDoc(todayAchive, {
-      achivement: achivement
+      achivement: state.achivement
     });
   },
 
@@ -136,6 +141,29 @@ const methods = {
         achivement: doc.data().achivement
       })
     });
+  },
+
+  calcAchivement(){
+    let achive,done=0,temp = 0;
+
+    let doneList = state.todoList.filter((e) => {
+      return e.isDone != false;
+    });
+
+    for (let i = 0; i < state.todoList.length; i++) {
+      temp = temp + state.todoList[i].importance;
+    }
+
+    for (let v = 0; v < doneList.length; v++) {
+      done = done +  doneList[v].importance;
+    }
+
+    if (temp === 0 ) {
+      return 0;
+    } else {
+      achive = done/temp;
+      return achive;
+    }
   }
 }
 

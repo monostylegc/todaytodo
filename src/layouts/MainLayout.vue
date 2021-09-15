@@ -2,12 +2,19 @@
   <q-layout view="hHh lpR fFf">
     <q-header reveal bordered class="bg-white text-grey-8">
       <q-toolbar class="constrain">
+        <q-btn
+          flat
+          @click="drawer = !drawer"
+          round
+          dense
+          icon="eva-menu-outline"
+        />
         <q-toolbar-title> 작심1일 </q-toolbar-title>
         <q-space />
 
         <q-btn
           flat
-          label="로그아웃"
+          icon="logout"
           @click="store.methods.logOut"
           v-show="store.state.user.uid"
         />
@@ -21,7 +28,7 @@
           v-show="this.$route.fullPath === '/'"
           fab
           icon="add"
-          color="primary"
+          color="green"
           @click="
             store.state.todoList.length >= 5
               ? $q.notify({
@@ -33,21 +40,31 @@
         />
       </q-page-sticky>
     </q-page-container>
+    <q-drawer
+      v-model="drawer"
+      show-if-above
+      :width="200"
+      :breakpoint="500"
+      bordered
+      class="bg-grey-3"
+    >
+      <q-scroll-area class="fit">
+        <q-list>
+          <template v-for="(menuItem, index) in menuList" :key="index">
+            <q-item v-ripple clickable @click="this.$router.push(menuItem.to)">
+              <q-item-section avatar>
+                <q-icon :name="menuItem.icon" />
+              </q-item-section>
+              <q-item-section>
+                {{ menuItem.label }}
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-list>
+      </q-scroll-area>
+    </q-drawer>
 
-    <q-footer reveal bordered class="bg-white text-grey-8">
-      <q-tabs
-        v-model="tab"
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <q-route-tab name="Todo" label="Todo" to="/" />
-        <q-route-tab name="Log" label="Log" to="/log" />
-      </q-tabs>
-    </q-footer>
+    <q-footer reveal bordered class="bg-white text-grey-8"> </q-footer>
   </q-layout>
 </template>
 
@@ -64,8 +81,32 @@ export default defineComponent({
     const store = inject("store");
 
     const tab = ref("Today");
+    const menuList = [
+      {
+        icon: "eva-checkmark-circle-outline",
+        label: "오늘 할 일",
+        to: "/",
+      },
+      {
+        icon: "eva-flag-outline",
+        label: "목표",
+        to: "",
+      },
+      {
+        icon: "eva-activity-outline",
+        label: "기록",
+        to: "/log",
+      },
+      {
+        icon: "help",
+        iconColor: "primary",
+        label: "Help",
+      },
+    ];
 
     return {
+      drawer: ref(false),
+      menuList,
       tab,
       store,
     };
