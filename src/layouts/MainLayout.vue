@@ -88,11 +88,6 @@ export default defineComponent({
         to: "/",
       },
       {
-        icon: "eva-flag-outline",
-        label: "목표",
-        to: "/goal",
-      },
-      {
         icon: "eva-activity-outline",
         label: "기록",
         to: "/log",
